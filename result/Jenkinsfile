@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+
+    stages {
+        stage("build") {
+            when {
+                changeset "**/result/**"
+            }
+            steps {
+                echo 'Installing dependencies for result app..'
+                dir('result') {
+                    sh 'npm install'
+                }
+            }
+        }
+
+        stage("test") {
+            when {
+                changeset "**/result/**"
+            }
+            steps {
+                echo 'Running tests for result app..'
+                dir('result') {
+                    sh 'npm test'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Result application pipeline completed.'
+        }
+    }
+}
